@@ -1,6 +1,9 @@
 # Node.js
 node_modules/
 
+# Next.js build output
+.next/
+
 # Build output
 build/
 dist/
@@ -22,3 +25,8 @@ Thumbs.db
 # IDEs and Editors
 .idea/
 .vscode/
+
+
+# Operating system files
+.DS_Store
+Thumbs.db
