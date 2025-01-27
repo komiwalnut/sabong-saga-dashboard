@@ -35,13 +35,18 @@ This is a dashboard template that displays information about the holders of a cr
    npm install
    ```
 
-4. Run the development server
+4. Build the project
    ```bash
-   npm start
+   npm run build
+   ```
+
+5. Run the development server
+   ```bash
+   npm run start
    ```
    This will run the dashboard locally, and you can view it in your browser at http://localhost:3000.
 
-5. Deploy to Vercel or any other hosting provider by following their respective deployment instructions.
+6. Deploy to Vercel or any other hosting provider by following their respective deployment instructions.
 
 ### Deployment
 1. Install Vercel CLI (if not already installed):
