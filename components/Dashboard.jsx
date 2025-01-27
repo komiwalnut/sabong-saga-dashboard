@@ -39,7 +39,7 @@ export default function TokenHoldersDashboard() {
 
     if (cachedData && cacheLastUpdatedAt && cacheTime && Date.now() - cacheTime < CACHE_EXPIRY_TIME) {
       setHolders(cachedData.holders);
-      setUpdatedAt(cacheLastUpdatedAt); // Ensure updatedAt is set correctly from cache
+      setUpdatedAt(cacheLastUpdatedAt);
       return;
     }
 
@@ -47,7 +47,7 @@ export default function TokenHoldersDashboard() {
 
     let offset = 0;
     let allHolders = [];
-    let fetchedUpdatedAt = ''; // Add a temporary variable for the updatedAt time
+    let fetchedUpdatedAt = '';
     try {
       while (true) {
         const response = await fetch(`${API_URL}?limit=${LIMIT}&offset=${offset}`);
@@ -60,7 +60,6 @@ export default function TokenHoldersDashboard() {
 
         const json = await response.json();
         if (offset === 0) {
-          // Update the fetchedUpdatedAt once we get the data from the first request
           fetchedUpdatedAt = new Date(json.result.items[0].updatedAt * 1000)
             .toISOString()
             .replace('T', ' ')
@@ -84,13 +83,12 @@ export default function TokenHoldersDashboard() {
         }
       }
 
-      // Store both holders and updatedAt with cache time
       localStorage.setItem('holdersData', JSON.stringify({ holders: allHolders }));
       localStorage.setItem('cacheTime', Date.now().toString());
       localStorage.setItem('LastUpdatedAt', fetchedUpdatedAt);
 
       setHolders(allHolders);
-      setUpdatedAt(fetchedUpdatedAt); // Update state with the new `updatedAt` value
+      setUpdatedAt(fetchedUpdatedAt);
     } catch (error) {
       console.error('Error fetching token holders:', error);
     }
