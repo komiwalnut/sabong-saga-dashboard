@@ -32,7 +32,6 @@ export default function TokenHoldersDashboard() {
       const response = await fetch('/api/holders');
       if (!response.ok) throw new Error('Failed to fetch data from the API');
       const json = await response.json();
-      console.log('API Response:', json);
   
       setHolders(json.holders);
       setUpdatedAt(json.updatedAt);

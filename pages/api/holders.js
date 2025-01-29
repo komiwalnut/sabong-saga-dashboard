@@ -9,25 +9,19 @@ const CACHE_EXPIRY_TIME = 300;
 
 export default async function handler(req, res) {
     try {
-        console.time("Redis Get");
         const cachedData = await redisClient.get(CACHE_KEY);
         const cacheUpdatedAt = await redisClient.get(CACHE_UPDATED_AT_KEY);
-        console.timeEnd("Redis Get");
 
         if (cachedData && cacheUpdatedAt) {
             console.log("Serving from cache");
             return res.json({ holders: JSON.parse(cachedData), updatedAt: cacheUpdatedAt });
         }
 
-        console.log("Fetching first API response...");
         const firstResponse = await fetch(`${API_URL}?limit=${LIMIT}&offset=0`);
         if (!firstResponse.ok) throw new Error(`API Error: ${firstResponse.statusText}`);
         
         const firstJson = await firstResponse.json();
-        console.log(firstJson);
         const totalHolders = firstJson.result.paging.total;
-        
-        console.log(`Total holders: ${totalHolders}`);
         
         const fetchedUpdatedAt = new Date(firstJson.result.items[0].updatedAt * 1000)
             .toISOString()
@@ -39,7 +33,6 @@ export default async function handler(req, res) {
         let callCount = 0;
 
         while (offset < totalHolders) {
-            console.log(`Fetching holders from offset ${offset}...`);
             const response = await fetch(`${API_URL}?limit=${LIMIT}&offset=${offset}`);
             if (!response.ok) throw new Error(`API Error at offset ${offset}: ${response.statusText}`);
             
@@ -66,7 +59,6 @@ export default async function handler(req, res) {
         await redisClient.set(CACHE_UPDATED_AT_KEY, fetchedUpdatedAt, { EX: CACHE_EXPIRY_TIME });
         console.timeEnd("Redis Set");
 
-        console.log("Data fetched successfully!");
         res.json({ holders: allHolders, updatedAt: fetchedUpdatedAt });
 
     } catch (error) {
