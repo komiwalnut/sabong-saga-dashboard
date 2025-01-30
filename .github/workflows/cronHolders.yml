@@ -7,4 +7,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Vercel Cron API
-        run: curl -X GET "token-dashboard-ronin-sabong-saga.vercel.app/api/holders"
+        run: curl -X GET "https://token-dashboard-ronin-sabong-saga.vercel.app/api/holders"
