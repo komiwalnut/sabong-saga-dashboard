@@ -43,29 +43,32 @@ export default function TokenHoldersDashboard() {
   }
 
   return (
-    <div className="container mx-auto p-6 bg-gradient-to-b from-[#eab547] to-[#f3d482] text-[#f0e3c2]">
-      <img src="/image.png" alt="Coin Icon" className="w-64 h-64 mb-4 mx-auto" />
-      <h2 className="text-3xl font-bold mb-2 text-center">$COCK Holders Dashboard</h2>
-      <p className="text-center mb-4"><b>Last Updated At:</b> {updatedAt}</p>
-      <table className="w-full border-collapse border border-[#9f191c] text-center">
+    <div className="container bg-gradient-to-b from-[#eab547] to-[#f3d482] text-[#f0e3c2]">
+      <img src="/image.png" alt="Coin Icon" className="coin-icon" />
+      <h2>$COCK Holders Dashboard</h2>
+      <p className="text-center mb-4">
+        <b>Last Updated At:</b> {updatedAt}
+      </p>
+      <table>
         <thead>
-          <tr className="bg-[#58390f] text-[#f0e3c2]">
-            <th className="border border-gray-300 px-4 py-2">Address</th>
-            <th className="border border-gray-300 px-4 py-2">Balance</th>
-            <th className="border border-gray-300 px-4 py-2">Percentage</th>
+          <tr>
+            <th>Address</th>
+            <th>Balance</th>
+            <th>Percentage</th>
+            <th>On-chain 🪶</th>
+            <th>Off-chain 🪶</th>
           </tr>
         </thead>
         <tbody>
           {holders.map((holder, index) => (
-            <tr key={index} className="bg-[#f3d482]">
-              <td className="border border-gray-300 px-4 py-2">{holder.address}</td>
-              <td className="border border-gray-300 px-4 py-2">{holder.balance}</td>
-              <td className="border border-gray-300 px-4 py-2">{holder.percentage}</td>
+            <tr key={index}>
+              <td>{holder.address}</td>
+              <td>{holder.balance}</td>
+              <td>{holder.percentage}</td>
             </tr>
           ))}
         </tbody>
       </table>
-
       {loading && <p className="text-center">{loadingText}</p>}
     </div>
   );
