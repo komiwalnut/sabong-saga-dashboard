@@ -63,7 +63,7 @@ export default function TokenHoldersDashboard() {
         <tbody>
           {holders.map((holder, index) => (
             <tr key={index}>
-              <td>{holder.address}</td>
+              <td>{holder.displayName}</td>
               <td>{holder.balance}</td>
               <td>{holder.percentage}</td>
             </tr>
