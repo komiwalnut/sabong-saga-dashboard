@@ -49,8 +49,12 @@ export default function TokenHoldersDashboard() {
       <img src="/image.png" alt="Coin Icon" className="coin-icon" />
       <h2>$COCK Holders Dashboard</h2>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-        <div><b>Total Holders:</b> {totalHolders}</div>
-        <div><b>Last Updated At:</b> {updatedAt}</div>
+        <div>
+          <b>Total Holders:</b> {totalHolders.toLocaleString()}
+        </div>
+        <div>
+          <b>Last Updated At:</b> {updatedAt}
+        </div>
       </div>
       <table>
         <thead>
@@ -70,22 +74,24 @@ export default function TokenHoldersDashboard() {
           ))}
         </tbody>
       </table>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px' }}>
-        <div>
-          <span>Show&nbsp;</span>
-          <select value={limit} onChange={handleLimitChange}>
-            <option value={25}>25</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-          </select>
-          <span>&nbsp;transfers</span>
+      {holders.length > 0 && (
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px' }}>
+          <div>
+            <span>Show&nbsp;</span>
+            <select value={limit} onChange={handleLimitChange}>
+              <option value={25}>25</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+            </select>
+            <span>&nbsp;transfers</span>
+          </div>
+          <div>
+            <button onClick={goToPreviousPage} disabled={page === 1}>&lt;</button>
+            <span style={{ margin: '0 10px' }}>Page {page} of {totalPages}</span>
+            <button onClick={goToNextPage} disabled={page === totalPages}>&gt;</button>
+          </div>
         </div>
-        <div>
-          <button onClick={goToPreviousPage} disabled={page === 1}>&lt;</button>
-          <span style={{ margin: '0 10px' }}>Page {page} of {totalPages}</span>
-          <button onClick={goToNextPage} disabled={page === totalPages}>&gt;</button>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
