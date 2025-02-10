@@ -1,6 +1,6 @@
 # $COCK Holders Dashboard
 
-This is a dashboard template that displays information about the holders of a cryptocurrency token. By default, it shows the holders of the $COCK cryptocurrency token, but you can customize it to display the holders of any other token by changing the API URL and token parameters.
+This is a dashboard template that displays information about the holders of a cryptocurrency token. By default, it shows the holders of the $COCK cryptocurrency token, but you can customize it to display the holders of any other token by changing the API URL and token parameters. 
 
 ## Features
 - Displays a list of holders with their balance and percentage.
