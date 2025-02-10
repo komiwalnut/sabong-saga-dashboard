@@ -1,28 +1,29 @@
 {
-    "name": "token-dashboard",
-    "version": "1.0.0",
-    "description": "A dashboard for ${token} holders",
-    "main": "index.js",
-    "type": "module",
-    "scripts": {
-        "dev": "next dev",
-        "build": "next build",
-        "start": "next start"
-    },
-    "dependencies": {
-        "@vercel/analytics": "^1.4.1",
-        "@vercel/speed-insights": "^1.1.0",
-        "axios": "^1.3.3",
-        "cors": "^2.8.5",
-        "ethers": "^6.13.5",
-        "next": "13.3.0",
-        "node-fetch": "^2.7.0",
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0",
-        "redis": "^4.7.0"
-    },
-    "devDependencies": {
-        "eslint": "^8.39.0",
-        "eslint-config-next": "^13.3.0"
-    }
+  "name": "token-dashboard",
+  "version": "1.0.0",
+  "description": "A dashboard for ${token} holders",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@vercel/analytics": "^1.4.1",
+    "@vercel/speed-insights": "^1.1.0",
+    "axios": "^1.3.3",
+    "cors": "^2.8.5",
+    "ethers": "^6.13.5",
+    "next": "13.3.0",
+    "node-fetch": "^2.7.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "redis": "^4.7.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.39.0",
+    "eslint-config-next": "^13.3.0"
+  }
 }
