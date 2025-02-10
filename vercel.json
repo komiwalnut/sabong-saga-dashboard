@@ -1,8 +1,9 @@
 {
   "version": 2,
-  "functions": {
-    "pages/api/holders.js": {
-      "maxDuration": 60
+  "routes": [
+    {
+      "src": "/api/holders",
+      "dest": "/api/holders.js"
     }
-  }
+  ]
 }
