@@ -1,7 +1,7 @@
 {
   "version": 2,
   "functions": {
-    "pages/api/holders.js": {
+    "app/api/holders/route.js": {
       "maxDuration": 60
     }
   }
