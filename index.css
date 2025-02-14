@@ -3,12 +3,11 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  background-color: #eab547;
+  background-color: #fff4db;
 }
 
 .container {
-  background-color: #f0e3c2;
-  border-radius: 8px;
+  background-color: #f4d8a4; 
   padding: 20px;
   width: 40%;
   margin: 0 auto;
@@ -18,7 +17,7 @@ html, body {
 
 h2 {
   font-size: 2em;
-  color: #9f191c;
+  color: #9f191c; 
   text-align: center;
 }
 
@@ -30,29 +29,21 @@ table {
 
 th, td {
   padding: 10px;
-  border: 1px solid #9f191c;
+  border: 1px solid #9f191c; 
   text-align: center;
 }
 
 th {
-  background-color: #9f191c;
-  color: #fff3d4;
+  background-color: #9f191c; 
+  color: #fff;              
 }
 
 tbody tr {
-  background-color: #f3d482;
+  background-color: #fff4db; 
 }
 
 tbody tr:hover {
-  background-color: #eab547;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.bg-gradient-to-b {
-  background: linear-gradient(to bottom, #eab547, #f3d482);
+  background-color: #f9e4b7; 
 }
 
 .coin-icon {
