@@ -291,6 +291,7 @@ html.dark .loading-text {
 html.dark .dark-toggle {
   background-color: #1f2937;
   border-color: #374151;
+  color: white;
 }
 
 .dark-toggle:hover {
