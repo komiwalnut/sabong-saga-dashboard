@@ -19,40 +19,30 @@ export default function TokenHoldersDashboard() {
   );
 
   useEffect(() => {
-    console.log('Initial dark mode:', isDark);
-    console.log('Has dark class:', document.documentElement.classList.contains('dark'));
-  }, []);
-
-  useEffect(() => {
     if (isDark) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
-    console.log('Dark mode changed to:', isDark);
-    console.log('HTML classes:', document.documentElement.classList.toString());
   }, [isDark]);
 
   const toggleDarkMode = useCallback(() => {
-    console.log('Toggle clicked, current state:', isDark);
     setIsDark(prev => !prev);
-  }, [isDark]);
+  }, []);
 
   const fetchHolders = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       const response = await fetch(`/api/tokenHolders?page=${page}&limit=${limit}`);
-      if (!response.ok) throw new Error('Failed to fetch data from the API');
+      if (!response.ok) throw new Error('Failed to fetch data');
       const json = await response.json();
-
       setHolders(json.holders);
       setUpdatedAt(json.updatedAt);
       setTotalPages(json.totalPages);
       setTotalHolders(json.totalHolders);
     } catch (error) {
-      console.error('Error fetching token holders:', error);
-      setError('Failed to load holders data. Please try again later.');
+      setError('Failed to load data');
     } finally {
       setLoading(false);
     }
@@ -77,7 +67,7 @@ export default function TokenHoldersDashboard() {
 
   if (error) {
     return (
-      <div className="container dark:bg-gray-800 dark:text-white">
+      <div className="container">
         <div className="text-center p-8 bg-red-50 rounded-lg">
           <p className="text-red-600 mb-4">{error}</p>
           <button 
@@ -92,60 +82,54 @@ export default function TokenHoldersDashboard() {
   }
 
   return (
-    <div className="container relative bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
+    <div className="container relative">
       <button
         onClick={toggleDarkMode}
-        className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+        className="dark-toggle"
         aria-label="Toggle dark mode"
       >
-        {isDark ? (
-          <Sun className="w-5 h-5 text-yellow-500" />
-        ) : (
-          <Moon className="w-5 h-5 text-gray-600" />
-        )}
+        {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
       </button>
 
       <div className="text-center mb-8">
         <img src="/cock-token.png" alt="Coin Icon" className="coin-icon" />
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 !important">
-          $COCK Holders Dashboard
-        </h2>
+        <h2 className="dashboard-title">$COCK Holders Dashboard</h2>
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }} className="text-gray-700 dark:text-gray-100">
+      <div className="stats-container">
         <div>
-          <b className="text-gray-900 dark:text-gray-100">Total Holders </b>
-          <span className="text-gray-900 dark:text-gray-100">{totalHolders.toLocaleString()}</span>
+          <b>Total Holders: </b>
+          <span>{totalHolders.toLocaleString()}</span>
         </div>
         <div>
-          <b className="text-gray-900 dark:text-gray-100">Last Updated At </b>
-          <span className="text-gray-900 dark:text-gray-100">{updatedAt}</span>
+          <b>Last Updated At: </b>
+          <span>{updatedAt}</span>
         </div>
       </div>
 
       {loading ? (
         <div className="text-center py-12">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-[3px] border-gray-200 border-t-blue-600"></div>
-          <p className="mt-4 text-gray-500 dark:text-gray-300">Loading data...</p>
+          <p className="loading-text mt-4">Loading data...</p>
         </div>
       ) : (
         <>
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="rounded-lg border overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="data-table">
                 <thead>
-                <tr>
-                  <th className="font-medium text-gray-700 dark:text-gray-200">Address</th>
-                  <th className="text-right font-medium text-gray-700 dark:text-gray-200">Balance</th>
-                  <th className="text-right font-medium text-gray-700 dark:text-gray-200">Percentage</th>
-                </tr>
+                  <tr>
+                    <th className="table-header">Address</th>
+                    <th className="table-header text-right">Balance</th>
+                    <th className="table-header text-right">Percentage</th>
+                  </tr>
                 </thead>
                 <tbody>
                   {holders.map((holder, index) => (
-                    <tr key={holder.address || index} className="transition-colors dark:hover:bg-gray-800">
-                      <td className="font-mono text-sm text-gray-900 dark:text-gray-200">{holder.displayName}</td>
-                      <td className="text-right text-gray-900 dark:text-gray-200">{holder.balance}</td>
-                      <td className="text-right text-gray-900 dark:text-gray-200">{holder.percentage}</td>
+                    <tr key={holder.address || index}>
+                      <td className="table-cell font-mono text-sm">{holder.displayName}</td>
+                      <td className="table-cell text-right">{holder.balance}</td>
+                      <td className="table-cell text-right">{holder.percentage}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -154,13 +138,13 @@ export default function TokenHoldersDashboard() {
           </div>
 
           {holders.length > 0 && (
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px'}} className="text-gray-900 dark:text-gray-300">
+            <div className="pagination-container">
               <div>
                 <span>Show </span>
                 <select 
                   value={limit} 
                   onChange={handleLimitChange} 
-                  className="stats-text"
+                  className="pagination-btn"
                 >
                   <option value={25}>25</option>
                   <option value={50}>50</option>
@@ -168,12 +152,20 @@ export default function TokenHoldersDashboard() {
                 </select>
                 <span> transfers</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <button onClick={goToPreviousPage} disabled={page === 1} className="pagination-btn">
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={goToPreviousPage} 
+                  disabled={page === 1} 
+                  className="pagination-btn"
+                >
                   &lt;
                 </button>
-                <span style={{ margin: '0 10px' }}>Page {page} of {totalPages}</span>
-                <button onClick={goToNextPage} disabled={page === totalPages} className="pagination-btn">
+                <span> Page {page} of {totalPages} </span>
+                <button 
+                  onClick={goToNextPage} 
+                  disabled={page === totalPages} 
+                  className="pagination-btn"
+                >
                   &gt;
                 </button>
               </div>
