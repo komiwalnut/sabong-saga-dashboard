@@ -18,6 +18,87 @@ export default function TokenHoldersDashboard() {
     window.matchMedia('(prefers-color-scheme: dark)').matches
   );
 
+  const [hearts, setHearts] = useState([]);
+  const [sparkles, setSparkles] = useState([]);
+
+  const createHeart = (x, y) => {
+    const newHeart = {
+      id: Date.now() + Math.random(),
+      x: x - 10,
+      y: y - 10,
+      delay: Math.random() * 0.5
+    };
+    setHearts(prev => [...prev, newHeart]);
+  };
+  
+  const createSparkle = (x, y) => {
+    const newSparkle = {
+      id: Date.now() + Math.random(),
+      x: x - 10,
+      y: y - 10
+    };
+    setSparkles(prev => [...prev, newSparkle]);
+  };
+
+  useEffect(() => {
+    const heartTimer = setInterval(() => {
+      setHearts(prev => prev.filter(heart => 
+        Date.now() - heart.id < 1200
+      ));
+    }, 1000);
+  
+    const sparkleTimer = setInterval(() => {
+      setSparkles(prev => prev.filter(s => 
+        Date.now() - s.id < 600
+      ));
+    }, 500);
+  
+    return () => {
+      clearInterval(heartTimer);
+      clearInterval(sparkleTimer);
+    };
+  }, []);
+  
+  const handleCoinHover = useCallback((e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    createHeart(x, y);
+  }, []);
+  
+  const handleCoinClick = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    Array.from({ length: 8 }).forEach((_, i) => {
+      const angle = (i * Math.PI) / 4;
+      const x = rect.width/2 + Math.cos(angle) * 40;
+      const y = rect.height/2 + Math.sin(angle) * 40;
+      createHeart(x, y);
+    });
+    createSparkle(e.clientX - rect.left, e.clientY - rect.top);
+  };
+
+  const handleMouseMove = useCallback((e) => {
+    const coin = e.currentTarget;
+    const rect = coin.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    
+    const rotateX = -(e.clientY - centerY) / 15;
+    const rotateY = (e.clientX - centerX) / 15;
+    
+    coin.style.transform = `
+      perspective(1000px)
+      rotateX(${rotateX}deg)
+      rotateY(${rotateY}deg)
+      scale(1.1)
+    `;
+  }, []);
+  
+  const handleMouseLeave = useCallback((e) => {
+    const coin = e.currentTarget;
+    coin.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+  }, []);
+
   useEffect(() => {
     if (isDark) {
       document.documentElement.classList.add('dark');
@@ -92,7 +173,39 @@ export default function TokenHoldersDashboard() {
       </button>
 
       <div className="text-center mb-8">
-        <img src="/cock-token.png" alt="Coin Icon" className="coin-icon" />
+        <div className="coin-container">
+          <img src="/images/cock-token.png" alt="Coin Icon" className="coin-icon" 
+          onMouseMove={(e) => { 
+            handleMouseMove(e); if(Math.random() > 0.7) handleCoinHover(e); 
+            }} 
+          onMouseLeave={handleMouseLeave} onClick={handleCoinClick} />
+        
+          {hearts.map(heart => (
+            <div 
+              key={heart.id}
+              className="heart-particle"
+              style={{
+                left: `${heart.x}px`,
+                top: `${heart.y}px`,
+                animationDelay: `${heart.delay}s`,
+                fontSize: `${Math.random() * 12 + 12}px`,
+                color: `hsl(${Math.random() * 360}deg, 70%, 60%)`
+              }}
+            > ❤️
+            </div>
+          ))}
+
+          {sparkles.map(sparkle => (
+              <div
+                key={sparkle.id}
+                className="coin-sparkle"
+                style={{
+                  left: `${sparkle.x}px`,
+                  top: `${sparkle.y}px`
+                }}
+              />
+            ))}
+        </div>
         <h2 className="dashboard-title">$COCK Holders Dashboard</h2>
       </div>
 
