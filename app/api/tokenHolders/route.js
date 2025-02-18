@@ -12,7 +12,6 @@ export async function GET(request) {
   const limit = parseInt(searchParams.get('limit')) || 25
   const offset = (page - 1) * limit
   
-  // Define cacheKey outside of the try-catch block
   const cacheKey = `tokenHoldersData:page-${page}:limit-${limit}`
   
   try {
