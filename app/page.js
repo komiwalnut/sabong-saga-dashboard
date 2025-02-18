@@ -1,12 +1,5 @@
-'use client';
+import { redirect } from 'next/navigation';
 
-import dynamic from 'next/dynamic';
-
-const TokenHoldersDashboard = dynamic(
-  () => import('./components/Dashboard'),
-  { ssr: false }
-);
-
-export default function Home() {
-  return <TokenHoldersDashboard />;
+export default function HomePage() {
+  redirect('/token');
 }
