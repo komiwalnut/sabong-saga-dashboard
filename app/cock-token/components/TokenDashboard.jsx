@@ -18,6 +18,38 @@ export default function TokenHoldersDashboard() {
     window.matchMedia('(prefers-color-scheme: dark)').matches
   );
 
+  const [stats, setStats] = useState({
+    totalSupply: 'Loading...',
+    circulating: 'Loading...',
+    transfers: 'Loading...',
+    decimals: 'Loading...',
+    contract: 'Loading...'
+  })
+  const [statsLoading, setStatsLoading] = useState(true)
+
+  const fetchTokenStats = useCallback(async () => {
+    try {
+      const response = await fetch('/api/tokenStats')
+      if (!response.ok) throw new Error('Failed to fetch stats')
+      const data = await response.json()
+      setStats({
+        totalSupply: data.totalSupply,
+        circulating: data.circulating,
+        transfers: data.transfers,
+        decimals: data.decimals,
+        contract: data.contract
+      })
+    } catch (error) {
+      console.error('Stats fetch error:', error)
+    } finally {
+      setStatsLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchTokenStats()
+  }, [fetchTokenStats])
+
   const [hearts, setHearts] = useState([]);
   const [sparkles, setSparkles] = useState([]);
 
@@ -209,14 +241,32 @@ export default function TokenHoldersDashboard() {
         <h2 className="dashboard-title">$COCK Holders Dashboard</h2>
       </div>
 
-      <div className="stats-container">
-        <div>
-          <b>Total Holders: </b>
-          <span>{totalHolders.toLocaleString()}</span>
+      <div className="stats-grid">
+        <div className="stat-card">
+          <h3 className="stat-title">Total Supply</h3>
+          <p className="stat-value">{stats.totalSupply.toLocaleString()}</p>
         </div>
-        <div>
-          <b>Last Updated At: </b>
-          <span>{updatedAt}</span>
+        <div className="stat-card">
+          <h3 className="stat-title">Circulating Supply</h3>
+          <p className="stat-value">
+            {typeof stats.circulating === 'number' 
+              ? `${stats.circulating.toLocaleString(undefined, { 
+                  maximumFractionDigits: 2 
+                })}`
+              : 'N/A'}
+          </p>
+        </div>
+        <div className="stat-card">
+          <h3 className="stat-title">Holders</h3>
+          <p className="stat-value">{totalHolders.toLocaleString()}</p>
+        </div>
+        <div className="stat-card">
+          <h3 className="stat-title">Transfers</h3>
+          <p className="stat-value">{stats.transfers}</p>
+        </div>
+        <div className="stat-card">
+          <h3 className="stat-title">Last Updated</h3>
+          <p className="stat-value">{updatedAt}</p>
         </div>
       </div>
 
@@ -263,7 +313,7 @@ export default function TokenHoldersDashboard() {
                   <option value={50}>50</option>
                   <option value={100}>100</option>
                 </select>
-                <span> transfers</span>
+                <span> holders</span>
               </div>
               <div className="flex items-center gap-2">
                 <button 

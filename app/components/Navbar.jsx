@@ -8,18 +8,18 @@ export default function Navbar() {
 
   useEffect(() => {
     if (pathname === '/') {
-      window.location.href = '/token';
+      window.location.href = '/cock-token';
     }
   }, [pathname]);
 
   return (
     <nav className="navbar">
       <div className="nav-container">
-        <Link href="/token" className={`nav-link ${pathname.startsWith('/token') ? 'active' : ''}`}>
-          Token Dashboard
+        <Link href="/cock-token" className={`nav-link ${pathname.startsWith('/cock-token') ? 'active' : ''}`}>
+          $COCK
         </Link>
         <Link href="/feather" className={`nav-link ${pathname.startsWith('/feather') ? 'active' : ''}`}>
-          Feather Dashboard
+          Feather
         </Link>
       </div>
     </nav>
