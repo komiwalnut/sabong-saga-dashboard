@@ -64,7 +64,7 @@ export async function GET() {
     const stats = {
       totalSupply: TOTAL_SUPPLY,
       circulating: circulating !== null ? circulating : null,
-      transfers: transfersData?.result?.paging?.total?.toLocaleString() || 'N/A',
+      burned: TOTAL_SUPPLY - circulating,
       decimals: 18
     }
 
