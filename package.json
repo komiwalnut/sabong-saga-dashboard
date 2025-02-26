@@ -16,6 +16,7 @@
     "cors": "^2.8.5",
     "ethers": "^6.13.5",
     "lucide-react": "^0.475.0",
+    "mongoose": "^8.10.1",
     "next": "^14.1.0",
     "node-fetch": "^3.3.2",
     "react": "^18.2.0",

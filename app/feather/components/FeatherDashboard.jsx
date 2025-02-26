@@ -2,32 +2,34 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { Moon, Sun } from 'lucide-react';
 
 export default function FeatherHoldersDashboard() {
   const [holders, setHolders] = useState([]);
-  const [updatedAt, setUpdatedAt] = useState('');
-  const [totalHolders, setTotalHolders] = useState(0);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(25);
   const [totalPages, setTotalPages] = useState(1);
   const [error, setError] = useState(null);
-  const [isDark, setIsDark] = useState(
-    typeof window !== 'undefined' && 
-    window.matchMedia('(prefers-color-scheme: dark)').matches
-  );
 
-  useEffect(() => {
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
+  const [stats, setStats] = useState({
+    totalOwners: 'Loading...',
+    quantity: 'Loading...',
+    dailyActiveUsers: 'Loading...'
+  });
+
+  const fetchFeatherStats = useCallback(async () => {
+    try {
+      const response = await fetch('/api/featherStats');
+      if (!response.ok) throw new Error('Failed to fetch stats');
+      const data = await response.json();
+      setStats({
+        totalOwners: data.totalOwners,
+        quantity: data.quantity,
+        dailyActiveUsers: data.dailyActiveUsers
+      });
+    } catch (error) {
+      console.error('Stats fetch error:', error);
     }
-  }, [isDark]);
-
-  const toggleDarkMode = useCallback(() => {
-    setIsDark(prev => !prev);
   }, []);
 
   const fetchHolders = useCallback(async () => {
@@ -38,9 +40,8 @@ export default function FeatherHoldersDashboard() {
       if (!response.ok) throw new Error('Failed to fetch data');
       const json = await response.json();
       setHolders(json.holders);
-      setUpdatedAt(json.updatedAt);
       setTotalPages(json.totalPages);
-      setTotalHolders(json.totalHolders);
+      setTotalHolders(json.totalFeathers);
     } catch (error) {
       setError('Failed to load data');
     } finally {
@@ -49,8 +50,9 @@ export default function FeatherHoldersDashboard() {
   }, [page, limit]);
 
   useEffect(() => {
+    fetchFeatherStats();
     fetchHolders();
-  }, [fetchHolders]);
+  }, [fetchFeatherStats, fetchHolders]);
 
   const goToPreviousPage = useCallback(() => {
     if (page > 1) setPage(prev => prev - 1);
@@ -83,27 +85,28 @@ export default function FeatherHoldersDashboard() {
 
   return (
     <div className="container relative">
-      <button
-        onClick={toggleDarkMode}
-        className="dark-toggle"
-        aria-label="Toggle dark mode"
-      >
-        {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-      </button>
-
       <div className="text-center mb-8">
-        <img src="/images/feather.png" alt="Feather Icon" className="feather-icon" />
+        <div className="coin-container">
+          <img src="/images/feather.gif" alt="Feather" className="feather-gif" 
+          onMouseMove={(e) => { 
+            handleMouseMove(e); if(Math.random() > 0.7) handleCoinHover(e); 
+            }} />
+        </div>
         <h2 className="dashboard-title">Feather Holders Dashboard</h2>
       </div>
 
-      <div className="stats-container">
-        <div>
-          <b>Total Holders: </b>
-          <span>{totalHolders.toLocaleString()}</span>
+      <div className="stats-grid">
+        <div className="stat-card">
+          <h3 className="stat-title">Quantity</h3>
+          <p className="stat-value">{stats.quantity.toLocaleString()}</p>
         </div>
-        <div>
-          <b>Last Updated At: </b>
-          <span>{updatedAt}</span>
+        <div className="stat-card">
+          <h3 className="stat-title">Total Owners</h3>
+          <p className="stat-value">{stats.totalOwners.toLocaleString()}</p>
+        </div>
+        <div className="stat-card">
+          <h3 className="stat-title">Daily Active Users</h3>
+          <p className="stat-value">{stats.dailyActiveUsers.toLocaleString()}</p>
         </div>
       </div>
 
@@ -120,7 +123,8 @@ export default function FeatherHoldersDashboard() {
                 <thead>
                   <tr>
                     <th className="table-header">Address</th>
-                    <th className="table-header text-right">Balance</th>
+                    <th className="table-header text-right">On-chain</th>
+                    <th className="table-header text-right">Off-chain</th>
                     <th className="table-header text-right">Percentage</th>
                   </tr>
                 </thead>
@@ -128,7 +132,8 @@ export default function FeatherHoldersDashboard() {
                   {holders.map((holder, index) => (
                     <tr key={holder.address || index}>
                       <td className="table-cell font-mono text-sm">{holder.displayName}</td>
-                      <td className="table-cell text-right">{holder.balance}</td>
+                      <td className="table-cell text-right">{holder.onChain}</td>
+                      <td className="table-cell text-right">{holder.offChain}</td>
                       <td className="table-cell text-right">{holder.percentage}</td>
                     </tr>
                   ))}
@@ -150,7 +155,7 @@ export default function FeatherHoldersDashboard() {
                   <option value={50}>50</option>
                   <option value={100}>100</option>
                 </select>
-                <span> transfers</span>
+                <span> holders</span>
               </div>
               <div className="flex items-center gap-2">
                 <button 
