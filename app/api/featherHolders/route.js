@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import fetch from 'node-fetch';
-import redisClient from '../../lib/redis-client';
+import redisClient from '../../lib/redisClient';
 import { namehash } from 'ethers';
 
 const ONCHAIN_API = 'https://skynet-api.roninchain.com/ronin/explorer/v2/tokens/0xc5da607b372eca2794f5b5452148751c358eb53c/top_holders';
