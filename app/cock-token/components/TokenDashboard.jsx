@@ -198,14 +198,6 @@ export default function TokenHoldersDashboard() {
 
   return (
     <div className="container relative">
-      <button
-        onClick={toggleDarkMode}
-        className="dark-toggle"
-        aria-label="Toggle dark mode"
-      >
-        {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-      </button>
-
       <div className="text-center mb-8">
         <div className="coin-container">
           <img src="/images/cock-token.png" alt="Coin Icon" className="coin-icon" 
