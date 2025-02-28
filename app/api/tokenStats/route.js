@@ -65,6 +65,7 @@ export async function GET() {
       totalSupply: TOTAL_SUPPLY,
       circulating: circulating !== null ? circulating : null,
       burned: TOTAL_SUPPLY - circulating,
+      transfers: transfersData.result.paging.total,
       decimals: 18
     }
 
