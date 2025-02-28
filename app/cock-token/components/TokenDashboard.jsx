@@ -22,6 +22,7 @@ export default function TokenHoldersDashboard() {
     totalSupply: 'Loading...',
     circulating: 'Loading...',
     transfers: 'Loading...',
+    burned: 'Loading...',
     decimals: 'Loading...',
     contract: 'Loading...'
   })
@@ -36,6 +37,7 @@ export default function TokenHoldersDashboard() {
         totalSupply: data.totalSupply,
         circulating: data.circulating,
         transfers: data.transfers,
+        burned: data.burned,
         decimals: data.decimals,
         contract: data.contract
       })
@@ -257,12 +259,16 @@ export default function TokenHoldersDashboard() {
           </p>
         </div>
         <div className="stat-card">
+          <h3 className="stat-title">Burned Supply</h3>
+          <p className="stat-value">{stats.burned.toLocaleString()}</p>
+        </div>
+        <div className="stat-card">
           <h3 className="stat-title">Holders</h3>
           <p className="stat-value">{totalHolders.toLocaleString()}</p>
         </div>
         <div className="stat-card">
           <h3 className="stat-title">Transfers</h3>
-          <p className="stat-value">{stats.transfers}</p>
+          <p className="stat-value">{stats.transfers.toLocaleString()}</p>
         </div>
         <div className="stat-card">
           <h3 className="stat-title">Last Updated</h3>

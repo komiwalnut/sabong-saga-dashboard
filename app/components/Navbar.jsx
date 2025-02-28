@@ -6,14 +6,17 @@ import { Moon, Sun } from 'lucide-react';
 
 export default function Navbar() {
   const pathname = usePathname();
-  const [isDark, setIsDark] = useState(
-    typeof window !== 'undefined' && 
-    window.matchMedia('(prefers-color-scheme: dark)').matches
-  );
+  const [isDark, setIsDark] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   const toggleDarkMode = () => {
     setIsDark(prev => !prev);
   };
+
+  useEffect(() => {
+    setIsDark(window.matchMedia('(prefers-color-scheme: dark)').matches);
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -45,7 +48,11 @@ export default function Navbar() {
           className="dark-toggle" 
           aria-label="Toggle dark mode"
         >
-          {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          {mounted ? (
+            isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />
+          ) : (
+            <div className="w-5 h-5"></div>
+          )}
         </button>
       </div>
     </nav>
