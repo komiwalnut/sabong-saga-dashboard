@@ -6,7 +6,7 @@ const CACHE_EXPIRY_TIME = 600;
 const TOTAL_API = 'https://feather-dashboard.vercel.app/api/feathers/total';
 const GRAPHQL_API = 'https://marketplace-graphql.skymavis.com/graphql';
 
-async function getTotalBurned() {
+/*async function getTotalBurned() {
   try {
     const [res1, res2] = await Promise.all([
       fetch('https://api.roninchain.com/rpc', {
@@ -45,7 +45,7 @@ async function getTotalBurned() {
     console.error('RPC Error:', error)
     return null
   }
-}
+}*/
 
 export async function GET() {
   const cacheKey = 'featherStats';
@@ -71,7 +71,7 @@ export async function GET() {
       `
     };
 
-    const [totalRes, graphqlRes, circulating] = await Promise.all([
+    const [totalRes, graphqlRes] = await Promise.all([
       fetch(TOTAL_API, {
         headers: {
           'Cookie': `auth_token=${authToken}`
@@ -83,8 +83,8 @@ export async function GET() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(graphqlQuery)
-      }),
-      getTotalBurned()
+      })
+      //getTotalBurned()
     ]);
 
     let totalData = { claimable: 0, totalWithdraws: 0, onChain: "0" };
