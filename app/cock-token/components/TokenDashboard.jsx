@@ -2,7 +2,6 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { Moon, Sun } from 'lucide-react';
 
 export default function TokenHoldersDashboard() {
   const [holders, setHolders] = useState([]);
