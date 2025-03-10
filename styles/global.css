@@ -436,3 +436,40 @@ html.dark .nav-link.active {
 html.dark .nav-link.active::after {
   background-color: #93c5fd;
 }
+
+.feather-stats-grid {
+  display: grid;
+  gap: 1rem;
+  width: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .feather-stats-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+.feather-icon {
+  width: 96px;
+  height: 96px;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform-style: preserve-3d;
+  cursor: pointer;
+  position: relative;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  animation: float 3s ease-in-out infinite;
+}
+
+.feather-dashboard-title {
+  font-size: 1.875rem;
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: #0f172a;
+}
+
+html.dark .feather-dashboard-title {
+  color: #f8bc38;
+}

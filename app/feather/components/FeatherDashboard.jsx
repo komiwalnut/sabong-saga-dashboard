@@ -5,7 +5,8 @@ import { useEffect, useState, useCallback } from 'react';
 
 export default function FeatherHoldersDashboard() {
   const [holders, setHolders] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [updatedAt, setUpdatedAt] = useState('');
+  const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(25);
   const [totalPages, setTotalPages] = useState(1);
@@ -14,21 +15,39 @@ export default function FeatherHoldersDashboard() {
   const [stats, setStats] = useState({
     totalOwners: 'Loading...',
     quantity: 'Loading...',
-    dailyActiveUsers: 'Loading...'
+    claimable: 'Loading...',
+    totalWithdraws: 'Loading...'
   });
 
   const fetchFeatherStats = useCallback(async () => {
     try {
       const response = await fetch('/api/featherStats');
-      if (!response.ok) throw new Error('Failed to fetch stats');
+      
+      if (!response.ok) {
+        setStats({
+          totalOwners: 'Error',
+          quantity: 'Error',
+          claimable: 'Error',
+          totalWithdraws: 'Error'
+        });
+        return;
+      }
+      
       const data = await response.json();
+      
       setStats({
         totalOwners: data.totalOwners,
         quantity: data.quantity,
-        dailyActiveUsers: data.dailyActiveUsers
+        claimable: data.claimable,
+        totalWithdraws: data.totalWithdraws
       });
     } catch (error) {
-      console.error('Stats fetch error:', error);
+      setStats({
+        totalOwners: 'Error',
+        quantity: 'Error',
+        claimable: 'Error',
+        totalWithdraws: 'Error'
+      });
     }
   }, []);
 
@@ -37,13 +56,36 @@ export default function FeatherHoldersDashboard() {
     setError(null);
     try {
       const response = await fetch(`/api/featherHolders?page=${page}&limit=${limit}`);
-      if (!response.ok) throw new Error('Failed to fetch data');
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      
       const json = await response.json();
-      setHolders(json.holders);
-      setTotalPages(json.totalPages);
-      setTotalHolders(json.totalFeathers);
+      
+      if (!json.holders || json.holders.length === 0) {
+        setHolders([
+          {
+            address: 'No data available',
+            displayName: 'No data available',
+            balance: '0'
+          }
+        ]);
+        setTotalPages(1);
+      } else {
+        setHolders(json.holders);
+        setTotalPages(json.totalPages || 1);
+        setUpdatedAt(json.updatedAt || '');
+      }
     } catch (error) {
       setError('Failed to load data');
+      setHolders([
+        {
+          address: 'Error loading data',
+          displayName: 'Error loading data',
+          balance: '0'
+        }
+      ]);
     } finally {
       setLoading(false);
     }
@@ -67,6 +109,12 @@ export default function FeatherHoldersDashboard() {
     setPage(1);
   }, []);
 
+  const formatDisplayValue = (value) => {
+    if (value === 'Loading...' || value === 'Error') return value;
+    if (typeof value === 'number') return value.toLocaleString();
+    return '0';
+  };
+
   if (error) {
     return (
       <div className="container">
@@ -87,26 +135,35 @@ export default function FeatherHoldersDashboard() {
     <div className="container relative">
       <div className="text-center mb-8">
         <div className="coin-container">
-          <img src="/images/feather.gif" alt="Feather" className="feather-gif" 
-          onMouseMove={(e) => { 
-            handleMouseMove(e); if(Math.random() > 0.7) handleCoinHover(e); 
-            }} />
+          <img 
+            src="/images/feather.gif" 
+            alt="Feather" 
+            className="feather-icon" 
+          />
         </div>
-        <h2 className="dashboard-title">Feather Holders Dashboard</h2>
+        <h2 className="feather-dashboard-title">Feather Holders Dashboard</h2>
       </div>
 
-      <div className="stats-grid">
+      <div className="feather-stats-grid">
         <div className="stat-card">
-          <h3 className="stat-title">Quantity</h3>
-          <p className="stat-value">{stats.quantity.toLocaleString()}</p>
+          <h3 className="stat-title">Quantity (On-Chain)</h3>
+          <p className="stat-value">{formatDisplayValue(stats.quantity)}</p>
         </div>
         <div className="stat-card">
           <h3 className="stat-title">Total Owners</h3>
-          <p className="stat-value">{stats.totalOwners.toLocaleString()}</p>
+          <p className="stat-value">{formatDisplayValue(stats.totalOwners)}</p>
         </div>
         <div className="stat-card">
-          <h3 className="stat-title">Daily Active Users</h3>
-          <p className="stat-value">{stats.dailyActiveUsers.toLocaleString()}</p>
+          <h3 className="stat-title">Claimable</h3>
+          <p className="stat-value">{formatDisplayValue(stats.claimable)}</p>
+        </div>
+        <div className="stat-card">
+          <h3 className="stat-title">Total Withdraws</h3>
+          <p className="stat-value">{formatDisplayValue(stats.totalWithdraws)}</p>
+        </div>
+        <div className="stat-card">
+          <h3 className="stat-title">Last Updated</h3>
+          <p className="stat-value">{updatedAt}</p>
         </div>
       </div>
 
@@ -123,18 +180,14 @@ export default function FeatherHoldersDashboard() {
                 <thead>
                   <tr>
                     <th className="table-header">Address</th>
-                    <th className="table-header text-right">On-chain</th>
-                    <th className="table-header text-right">Off-chain</th>
-                    <th className="table-header text-right">Percentage</th>
+                    <th className="table-header text-right">Balance</th>
                   </tr>
                 </thead>
                 <tbody>
                   {holders.map((holder, index) => (
                     <tr key={holder.address || index}>
                       <td className="table-cell font-mono text-sm">{holder.displayName}</td>
-                      <td className="table-cell text-right">{holder.onChain}</td>
-                      <td className="table-cell text-right">{holder.offChain}</td>
-                      <td className="table-cell text-right">{holder.percentage}</td>
+                      <td className="table-cell text-right">{holder.balance}</td>
                     </tr>
                   ))}
                 </tbody>

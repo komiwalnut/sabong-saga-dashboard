@@ -3,21 +3,8 @@ import fetch from 'node-fetch';
 import redisClient from '../../lib/redisClient';
 
 const CACHE_EXPIRY_TIME = 600;
-const FEATHER_API = 'https://skynet-api.roninchain.com/ronin/explorer/v2/collections/0xc5da607b372eca2794f5b5452148751c358eb53c/nfts/stats';
-const DAU_API = ''; // Replace with actual API
-
-async function fetchDailyActiveUsers() {
-  try {
-    const response = await fetch(DAU_API);
-    if (!response.ok) return 0;
-    const data = await response.json();
-    // Modify according to actual API response structure
-    return data.dailyActiveUsers || data.count || 0;
-  } catch (error) {
-    console.error('DAU API Error:', error);
-    return 0;
-  }
-}
+const TOTAL_API = 'https://feather-dashboard.vercel.app/api/feathers/total';
+const GRAPHQL_API = 'https://marketplace-graphql.skymavis.com/graphql';
 
 export async function GET() {
   const cacheKey = 'featherStats';
@@ -27,20 +14,53 @@ export async function GET() {
       if (cached) return NextResponse.json(JSON.parse(cached));
     }
 
-    const [featherRes, dau] = await Promise.all([
-      fetch(FEATHER_API, { method: 'POST' }),
-      fetchDailyActiveUsers()
+    const authToken = process.env.auth_token || '';
+
+    const graphqlQuery = {
+      "operationName": "GetTokenData",
+      "variables": {
+        "tokenAddress": "0xc5da607b372eca2794f5b5452148751c358eb53c"
+      },
+      "query": `
+        query GetTokenData($tokenAddress: String) {
+          tokenData(tokenAddress: $tokenAddress) {
+            totalOwners
+          }
+        }
+      `
+    };
+
+    const [totalRes, graphqlRes] = await Promise.all([
+      fetch(TOTAL_API, {
+        headers: {
+          'Cookie': `auth_token=${authToken}`
+        }
+      }),
+      fetch(GRAPHQL_API, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(graphqlQuery)
+      })
     ]);
 
-    if (!featherRes.ok) throw new Error('Feather stats failed');
-    
-    const featherData = await featherRes.json();
-    const featherStats = featherData.result?.items?.[0] || {};
+    let totalData = { claimable: 0, totalWithdraws: 0, onChain: "0" };
+    if (totalRes.ok) {
+      totalData = await totalRes.json();
+    }
+
+    let totalOwners = 0;
+    if (graphqlRes.ok) {
+      const graphqlData = await graphqlRes.json();
+      totalOwners = graphqlData?.data?.tokenData?.totalOwners || 0;
+    }
 
     const stats = {
-      totalOwners: featherStats.totalOwners || 0,
-      quantity: featherStats.quantity || 0,
-      dailyActiveUsers: dau
+      totalOwners: totalOwners,
+      quantity: parseInt(totalData.onChain || "0"),
+      claimable: totalData.claimable || 0,
+      totalWithdraws: totalData.totalWithdraws || 0
     };
 
     if (redisClient.isReady) {
@@ -49,7 +69,9 @@ export async function GET() {
 
     return NextResponse.json(stats);
   } catch (error) {
-    console.error('Stats Error:', error);
-    return NextResponse.json({ error: 'Failed to fetch stats' }, { status: 500 });
+    return NextResponse.json(
+      { error: error.message || 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 }
