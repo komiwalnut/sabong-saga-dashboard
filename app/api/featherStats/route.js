@@ -6,6 +6,47 @@ const CACHE_EXPIRY_TIME = 600;
 const TOTAL_API = 'https://feather-dashboard.vercel.app/api/feathers/total';
 const GRAPHQL_API = 'https://marketplace-graphql.skymavis.com/graphql';
 
+async function getTotalBurned() {
+  try {
+    const [res1, res2] = await Promise.all([
+      fetch('https://api.roninchain.com/rpc', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          method: 'eth_call',
+          params: [{
+            to: "0xc5da607b372eca2794f5b5452148751c358eb53c",
+            data: "0x70a08231000000000000000000000000000000000000000000000000000000000000dead"
+          }, "latest"],
+          id: 43,
+          jsonrpc: "2.0"
+        })
+      }),
+      fetch('https://api.roninchain.com/rpc', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          method: 'eth_call',
+          params: [{
+            to: "0xc5da607b372eca2794f5b5452148751c358eb53c",
+            data: "0x70a082310000000000000000000000000000000000000000000000000000000000000000"
+          }, "latest"],
+          id: 44,
+          jsonrpc: "2.0"
+        })
+      })
+    ])
+
+    const data1 = await res1.json()
+    const data2 = await res2.json()
+    const sum = BigInt(data1.result) + BigInt(data2.result)
+    return sum
+  } catch (error) {
+    console.error('RPC Error:', error)
+    return null
+  }
+}
+
 export async function GET() {
   const cacheKey = 'featherStats';
   try {
@@ -30,7 +71,7 @@ export async function GET() {
       `
     };
 
-    const [totalRes, graphqlRes] = await Promise.all([
+    const [totalRes, graphqlRes, circulating] = await Promise.all([
       fetch(TOTAL_API, {
         headers: {
           'Cookie': `auth_token=${authToken}`
@@ -42,7 +83,8 @@ export async function GET() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(graphqlQuery)
-      })
+      }),
+      getTotalBurned()
     ]);
 
     let totalData = { claimable: 0, totalWithdraws: 0, onChain: "0" };

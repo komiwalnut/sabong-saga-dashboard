@@ -15,6 +15,7 @@ export default function FeatherHoldersDashboard() {
   const [stats, setStats] = useState({
     totalOwners: 'Loading...',
     quantity: 'Loading...',
+    burned: 'Loading...',
     claimable: 'Loading...',
     totalWithdraws: 'Loading...'
   });
@@ -27,6 +28,7 @@ export default function FeatherHoldersDashboard() {
         setStats({
           totalOwners: 'Error',
           quantity: 'Error',
+          burned: 'Error',
           claimable: 'Error',
           totalWithdraws: 'Error'
         });
@@ -38,6 +40,7 @@ export default function FeatherHoldersDashboard() {
       setStats({
         totalOwners: data.totalOwners,
         quantity: data.quantity,
+        burned: data.burned,
         claimable: data.claimable,
         totalWithdraws: data.totalWithdraws
       });
@@ -45,6 +48,7 @@ export default function FeatherHoldersDashboard() {
       setStats({
         totalOwners: 'Error',
         quantity: 'Error',
+        burned: 'Error',
         claimable: 'Error',
         totalWithdraws: 'Error'
       });
@@ -148,6 +152,10 @@ export default function FeatherHoldersDashboard() {
         <div className="stat-card">
           <h3 className="stat-title">Quantity (On-Chain)</h3>
           <p className="stat-value">{formatDisplayValue(stats.quantity)}</p>
+        </div>
+        <div className="stat-card">
+          <h3 className="stat-title">Burned Supply</h3>
+          <p className="stat-value">{formatDisplayValue(120*8888)}</p>
         </div>
         <div className="stat-card">
           <h3 className="stat-title">Total Owners</h3>
