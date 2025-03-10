@@ -15,7 +15,7 @@ export default function FeatherHoldersDashboard() {
   const [stats, setStats] = useState({
     totalOwners: 'Loading...',
     quantity: 'Loading...',
-    burned: 'Loading...',
+    burnedTokens: 'Loading...',
     claimable: 'Loading...',
     totalWithdraws: 'Loading...'
   });
@@ -23,24 +23,12 @@ export default function FeatherHoldersDashboard() {
   const fetchFeatherStats = useCallback(async () => {
     try {
       const response = await fetch('/api/featherStats');
-      
-      if (!response.ok) {
-        setStats({
-          totalOwners: 'Error',
-          quantity: 'Error',
-          burned: 'Error',
-          claimable: 'Error',
-          totalWithdraws: 'Error'
-        });
-        return;
-      }
-      
       const data = await response.json();
       
       setStats({
         totalOwners: data.totalOwners,
         quantity: data.quantity,
-        burned: data.burned,
+        burnedTokens: data.burnedTokens,
         claimable: data.claimable,
         totalWithdraws: data.totalWithdraws
       });
@@ -48,7 +36,7 @@ export default function FeatherHoldersDashboard() {
       setStats({
         totalOwners: 'Error',
         quantity: 'Error',
-        burned: 'Error',
+        burnedTokens: 'Error',
         claimable: 'Error',
         totalWithdraws: 'Error'
       });
@@ -115,7 +103,12 @@ export default function FeatherHoldersDashboard() {
 
   const formatDisplayValue = (value) => {
     if (value === 'Loading...' || value === 'Error') return value;
-    if (typeof value === 'number') return value.toLocaleString();
+    if (typeof value === 'number' || typeof value === 'string') {
+      const numValue = typeof value === 'string' ? Number(value) : value;
+      if (!isNaN(numValue)) {
+        return numValue.toLocaleString();
+      }
+    }
     return '0';
   };
 
@@ -155,7 +148,7 @@ export default function FeatherHoldersDashboard() {
         </div>
         <div className="stat-card">
           <h3 className="stat-title">Burned Supply</h3>
-          <p className="stat-value">{formatDisplayValue(120*8888)}</p>
+          <p className="stat-value">{formatDisplayValue(stats.burnedTokens)}</p>
         </div>
         <div className="stat-card">
           <h3 className="stat-title">Total Owners</h3>
