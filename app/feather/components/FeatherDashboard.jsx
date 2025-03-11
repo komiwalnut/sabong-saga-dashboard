@@ -5,7 +5,7 @@ import { useEffect, useState, useCallback } from 'react';
 
 export default function FeatherHoldersDashboard() {
   const [holders, setHolders] = useState([]);
-  const [updatedAt, setUpdatedAt] = useState('');
+  const [updatedAt, setUpdatedAt] = useState('Loading...');
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(25);
