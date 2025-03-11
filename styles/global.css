@@ -667,3 +667,20 @@ html.dark .price-display {
     padding: 0;
   }
 }
+
+.price-display-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  cursor: pointer;
+}
+
+.price-display-link:hover .price-display {
+  filter: brightness(1.1);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+html:not(.dark) .price-display-link:hover .price-display {
+  filter: brightness(0.95);
+  border-color: rgba(0, 0, 0, 0.2);
+}

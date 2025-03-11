@@ -5,25 +5,19 @@ import { useEffect, useState, useCallback } from 'react';
 
 export default function TokenHoldersDashboard() {
   const [holders, setHolders] = useState([]);
-  const [updatedAt, setUpdatedAt] = useState('');
-  const [totalHolders, setTotalHolders] = useState(0);
+  const [updatedAt, setUpdatedAt] = useState('Loading...');
+  const [totalHolders, setTotalHolders] = useState('Loading...');
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(25);
   const [totalPages, setTotalPages] = useState(1);
   const [error, setError] = useState(null);
-  const [isDark, setIsDark] = useState(
-    typeof window !== 'undefined' && 
-    window.matchMedia('(prefers-color-scheme: dark)').matches
-  );
 
   const [stats, setStats] = useState({
     totalSupply: 'Loading...',
     circulating: 'Loading...',
-    transfers: 'Loading...',
     burned: 'Loading...',
-    decimals: 'Loading...',
-    contract: 'Loading...'
+    transfers: 'Loading...'
   })
   const [statsLoading, setStatsLoading] = useState(true)
 
@@ -36,9 +30,7 @@ export default function TokenHoldersDashboard() {
         totalSupply: data.totalSupply,
         circulating: data.circulating,
         transfers: data.transfers,
-        burned: data.burned,
-        decimals: data.decimals,
-        contract: data.contract
+        burned: data.burned
       })
     } catch (error) {
       console.error('Stats fetch error:', error)
@@ -130,18 +122,6 @@ export default function TokenHoldersDashboard() {
   const handleMouseLeave = useCallback((e) => {
     const coin = e.currentTarget;
     coin.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
-  }, []);
-
-  useEffect(() => {
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [isDark]);
-
-  const toggleDarkMode = useCallback(() => {
-    setIsDark(prev => !prev);
   }, []);
 
   const fetchHolders = useCallback(async () => {
@@ -246,7 +226,7 @@ export default function TokenHoldersDashboard() {
               ? `${stats.circulating.toLocaleString(undefined, { 
                   maximumFractionDigits: 2 
                 })}`
-              : 'N/A'}
+              : 'Loading...'}
           </p>
         </div>
         <div className="stat-card">

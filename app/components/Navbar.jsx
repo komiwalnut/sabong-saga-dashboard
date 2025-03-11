@@ -12,11 +12,20 @@ export default function Navbar() {
   const [featherPrice, setFeatherPrice] = useState(null);
 
   const toggleDarkMode = () => {
-    setIsDark(prev => !prev);
+    const newValue = !isDark;
+    setIsDark(newValue);
+    localStorage.setItem('darkMode', newValue.toString());
   };
 
   useEffect(() => {
-    setIsDark(window.matchMedia('(prefers-color-scheme: dark)').matches);
+    const savedMode = localStorage.getItem('darkMode');
+    if (savedMode !== null) {
+      setIsDark(savedMode === 'true');
+    } else {
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setIsDark(systemPrefersDark);
+      localStorage.setItem('darkMode', systemPrefersDark.toString());
+    }
     setMounted(true);
   }, []);
 
@@ -54,14 +63,13 @@ export default function Navbar() {
         
         if (data.cockPrice !== null && data.cockPrice !== undefined) {
           setCockPrice(data.cockPrice);
-          console.log("COCK price set to:", data.cockPrice);
         } else {
           console.log("No valid COCK price in response:", data);
         }
         
         if (data.featherPrice !== null && data.featherPrice !== undefined) {
           setFeatherPrice(data.featherPrice);
-          console.log("Feather price set to:", data.featherPrice);
+
         } else {
           console.log("No valid Feather price in response:", data);
         }
@@ -77,11 +85,11 @@ export default function Navbar() {
   }, []);
 
   const formattedCockPrice = cockPrice !== null 
-    ? `${parseFloat(cockPrice).toFixed(6)} USD` 
+    ? `${parseFloat(cockPrice).toFixed(4)} USD` 
     : <span className="loading-price">Loading...</span>;
     
   const formattedFeatherPrice = featherPrice !== null 
-    ? `${parseFloat(featherPrice).toFixed(2)} RON` 
+    ? `${parseFloat(featherPrice).toFixed(3)} RON` 
     : <span className="loading-price">Loading...</span>;
 
   return (
@@ -95,14 +103,28 @@ export default function Navbar() {
         </Link>
         
         <div className="price-info">
-          <span className="price-display">
-            <span className="price-symbol">1 COCK =</span>
-            <span className="price-value">{formattedCockPrice}</span>
-          </span>
-          <span className="price-display">
-            <span className="price-symbol">1 Feather =</span>
-            <span className="price-value">{formattedFeatherPrice}</span>
-          </span>
+          <a 
+            href="https://app.roninchain.com/swap?outputCurrency=0x8FD6b3FA81ADf438FEeb857E0b8aEd5f74f718ad#/swap" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="price-display-link"
+          >
+            <span className="price-display">
+              <span className="price-symbol">1 COCK =</span>
+              <span className="price-value">{formattedCockPrice}</span>
+            </span>
+          </a>
+          <a 
+            href="https://marketplace.roninchain.com/collections/sabong-saga-game-items/1" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="price-display-link"
+          >
+            <span className="price-display">
+              <span className="price-symbol">1 Feather =</span>
+              <span className="price-value">{formattedFeatherPrice}</span>
+            </span>
+          </a>
         </div>
         
         <button 
