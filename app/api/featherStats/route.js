@@ -38,7 +38,7 @@ export async function GET() {
       if (cached) return NextResponse.json(JSON.parse(cached));
     }
 
-    const authToken = process.env.auth_token || '';
+    const authToken = process.env.auth_token;
 
     const graphqlQuery = {
       "operationName": "GetTokenData",
@@ -87,9 +87,9 @@ export async function GET() {
 
     const stats = {
       totalOwners: totalOwners,
-      quantity: parseInt(totalData.onChain || "0"),
-      claimable: totalData.claimable || 0,
-      totalWithdraws: totalData.totalWithdraws || 0,
+      quantity: parseInt(totalData.onChain),
+      claimable: totalData.claimable,
+      totalWithdraws: totalData.totalWithdraws,
       burnedTokens: formattedBurnedTokens
     };
 

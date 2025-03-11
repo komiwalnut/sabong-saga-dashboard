@@ -12,10 +12,6 @@ export default function TokenHoldersDashboard() {
   const [limit, setLimit] = useState(25);
   const [totalPages, setTotalPages] = useState(1);
   const [error, setError] = useState(null);
-  const [isDark, setIsDark] = useState(
-    typeof window !== 'undefined' && 
-    window.matchMedia('(prefers-color-scheme: dark)').matches
-  );
 
   const [stats, setStats] = useState({
     totalSupply: 'Loading...',
@@ -130,18 +126,6 @@ export default function TokenHoldersDashboard() {
   const handleMouseLeave = useCallback((e) => {
     const coin = e.currentTarget;
     coin.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
-  }, []);
-
-  useEffect(() => {
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [isDark]);
-
-  const toggleDarkMode = useCallback(() => {
-    setIsDark(prev => !prev);
   }, []);
 
   const fetchHolders = useCallback(async () => {

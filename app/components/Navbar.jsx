@@ -12,11 +12,20 @@ export default function Navbar() {
   const [featherPrice, setFeatherPrice] = useState(null);
 
   const toggleDarkMode = () => {
-    setIsDark(prev => !prev);
+    const newValue = !isDark;
+    setIsDark(newValue);
+    localStorage.setItem('darkMode', newValue.toString());
   };
 
   useEffect(() => {
-    setIsDark(window.matchMedia('(prefers-color-scheme: dark)').matches);
+    const savedMode = localStorage.getItem('darkMode');
+    if (savedMode !== null) {
+      setIsDark(savedMode === 'true');
+    } else {
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setIsDark(systemPrefersDark);
+      localStorage.setItem('darkMode', systemPrefersDark.toString());
+    }
     setMounted(true);
   }, []);
 
@@ -54,14 +63,13 @@ export default function Navbar() {
         
         if (data.cockPrice !== null && data.cockPrice !== undefined) {
           setCockPrice(data.cockPrice);
-          console.log("COCK price set to:", data.cockPrice);
         } else {
           console.log("No valid COCK price in response:", data);
         }
         
         if (data.featherPrice !== null && data.featherPrice !== undefined) {
           setFeatherPrice(data.featherPrice);
-          console.log("Feather price set to:", data.featherPrice);
+
         } else {
           console.log("No valid Feather price in response:", data);
         }
