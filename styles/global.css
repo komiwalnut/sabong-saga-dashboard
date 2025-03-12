@@ -514,14 +514,6 @@ html.dark .nav-link.active::after {
   background-color: #93c5fd;
 }
 
-.feather-stats-grid {
-  display: grid;
-  gap: 1rem;
-  width: 100%;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  margin-bottom: 2rem;
-}
-
 .feather-icon {
   width: 96px;
   height: 96px;
@@ -531,18 +523,6 @@ html.dark .nav-link.active::after {
   position: relative;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
   animation: float 3s ease-in-out infinite;
-}
-
-.feather-dashboard-title {
-  font-size: 1.875rem;
-  text-align: center;
-  font-weight: 600;
-  letter-spacing: -0.025em;
-  color: #0f172a;
-}
-
-html.dark .feather-dashboard-title {
-  color: #f8bc38;
 }
 
 @media (max-width: 1260px) {
@@ -558,15 +538,12 @@ html.dark .feather-dashboard-title {
   
   .stats-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.6rem;
   }
 
   body {
     margin: 0;
     padding: 0;
-  }
-
-  .feather-stats-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .table-cell, .table-header {
@@ -587,10 +564,6 @@ html.dark .feather-dashboard-title {
     border-radius: 0px;
   }
 
-  .stats-grid {
-    gap: 0.6rem;
-  }
-
   .stat-title {
     font-size: 0.8rem;
   }
@@ -599,7 +572,7 @@ html.dark .feather-dashboard-title {
     font-size: 0.8rem;
   }
 
-  .dashboard-title, .feather-dashboard-title {
+  .dashboard-title {
     font-size: 1.5rem;
     margin-bottom: 0.75rem;
     margin-top: 0.5rem;
@@ -632,6 +605,11 @@ html.dark .feather-dashboard-title {
 
   .dark-toggle {
     margin-left: auto;
+  }
+
+  .dark-toggle svg {
+    width: 1rem;
+    height: 1rem;
   }
   
   .data-table {

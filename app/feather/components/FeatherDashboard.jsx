@@ -138,10 +138,10 @@ export default function FeatherHoldersDashboard() {
             className="feather-icon" 
           />
         </div>
-        <h2 className="feather-dashboard-title">Feather Holders Dashboard</h2>
+        <h2 className="dashboard-title">Feather Holders Dashboard</h2>
       </div>
 
-      <div className="feather-stats-grid">
+      <div className="stats-grid">
         <div className="stat-card">
           <h3 className="stat-title">Quantity (On-Chain)</h3>
           <p className="stat-value">{formatDisplayValue(stats.quantity)}</p>
