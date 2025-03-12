@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Base styles */
 html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   margin: 0;
@@ -17,16 +16,13 @@ body {
   padding: 0;
 }
 
-/* Dark mode base */
 html.dark {
   background-color: #1a202c;
 }
 
-/* Container */
 .container {
   padding: 2rem;
-  width: 95%;
-  max-width: 1300px;
+  max-width: 1200px;
   margin: 2rem auto;
   min-height: calc(100vh - 4rem);
   border-radius: 1rem;
@@ -41,7 +37,6 @@ html.dark .container {
   box-shadow: 0 1px 3px rgba(255, 255, 255, 0.1);
 }
 
-/* Title */
 .dashboard-title {
   font-size: 1.875rem;
   text-align: center;
@@ -54,18 +49,11 @@ html.dark .dashboard-title {
   color: #f8bc38;
 }
 
-/* Stats section */
 .stats-grid {
   display: grid;
   gap: 1rem;
   width: 100%;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-@media (min-width: 768px) {
-  .stats-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
 }
 
 @media (min-width: 1024px) {
@@ -74,7 +62,6 @@ html.dark .dashboard-title {
   }
 }
 
-/* Card styles */
 .stat-card {
   background-color: #ffffff;
   padding-left: 1rem;
@@ -106,7 +93,6 @@ html.dark .stat-value {
   color: #ffffff;
 }
 
-/* Grid layout */
 .grid-stats {
   display: grid;
   gap: 1rem;
@@ -117,13 +103,6 @@ html.dark .stat-value {
   grid-auto-columns: minmax(200px, 1fr);
 }
 
-@media (min-width: 768px) {
-  .grid-stats {
-    grid-template-columns: unset;
-  }
-}
-
-/* Table styles */
 .data-table {
   width: 100%;
   border-collapse: separate;
@@ -166,7 +145,6 @@ html.dark .table-cell {
   color: #e2e8f0;
 }
 
-/* Pagination controls */
 .pagination-container {
   display: flex;
   justify-content: space-between;
@@ -207,7 +185,6 @@ html.dark .pagination-btn:hover:not(:disabled) {
   cursor: not-allowed;
 }
 
-/* Select dropdown */
 select.pagination-btn {
   appearance: none;
   padding-right: 2rem;
@@ -221,7 +198,6 @@ html.dark select.pagination-btn {
   background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e2e8f0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
 }
 
-/* Loading spinner */
 .loading-text {
   color: #64748b;
 }
@@ -230,7 +206,6 @@ html.dark .loading-text {
   color: #cbd5e0;
 }
 
-/* Coin icon */
 .coin-container {
   perspective: 1000px;
   display: block;
@@ -334,18 +309,16 @@ html.dark .loading-text {
   pointer-events: none;
 }
 
-/* Dark mode toggle */
 .dark-toggle {
-  position: absolute;
-  top: 50%;
-  right: 1rem;
-  transform: translateY(-50%);
+  position: relative;
+  margin-left: 0.5rem;
   z-index: 10;
   padding: 0.5rem;
   border-radius: 9999px;
   background-color: white;
   border: 1px solid #e5e7eb;
   transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
 html.dark .dark-toggle {
@@ -362,20 +335,6 @@ html.dark .dark-toggle:hover {
   background-color: #374151;
 }
 
-/* Responsive container */
-@media (min-width: 640px) {
-  .container {
-    width: 90%;
-  }
-}
-
-@media (min-width: 1024px) {
-  .container {
-    width: 85%;
-  }
-}
-
-/* Navbar Styles */
 .navbar {
   background-color: #ffffff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -396,15 +355,19 @@ html.dark .navbar {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .price-info {
   display: flex;
   align-items: center;
   margin-left: auto;
-  margin-right: 3.5rem;
+  margin-right: 0;
   gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  flex: 1;
+  min-width: 0;
 }
 
 .price-display {
@@ -418,6 +381,7 @@ html.dark .navbar {
   color: #f8bc38;
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .price-display:hover {
@@ -475,26 +439,45 @@ html.dark .loading-price {
   50% { opacity: 0.5; }
 }
 
-@media (max-width: 768px) {
-  .price-info {
-    display: none;
+@media (max-width: 480px) {
+  .nav-container {
+    justify-content: space-between;
+  }
+
+  .table-cell, .table-header {
+    padding: 0.5rem 0.3rem;
+    font-size: 0.75rem;
+  }
+
+  .nav-link {
+    padding: 0.3rem 0.4rem;
+    font-size: 0.75rem;
+  }
+  
+  .dark-toggle {
+    padding: 0.35rem;
+  }
+  
+  .dark-toggle svg {
+    width: 1rem;
+    height: 1rem;
   }
 }
 
-@media (max-width: 500px) {
-  .nav-container {
-    padding-right: 3.5rem;
+@media (max-width: 540px) {
+  .cock-page .feather-price-display {
+    display: none;
   }
   
-  .nav-link {
-    padding: 0.5rem 0.5rem;
+  .feather-page .cock-price-display {
+    display: none;
   }
 }
 
 .nav-link {
   text-decoration: none !important;
   color: #4b5563;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.8rem;
   border-radius: 0.375rem;
   transition: background-color 0.2s ease, color 0.2s ease;
   font-weight: 500;
@@ -539,12 +522,6 @@ html.dark .nav-link.active::after {
   margin-bottom: 2rem;
 }
 
-@media (min-width: 768px) {
-  .feather-stats-grid {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-  }
-}
-
 .feather-icon {
   width: 96px;
   height: 96px;
@@ -568,7 +545,30 @@ html.dark .feather-dashboard-title {
   color: #f8bc38;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1260px) {
+  .container {
+    border-radius: 0px;
+  }
+}
+
+@media (max-width: 768px) {
+  .grid-stats {
+    grid-template-columns: unset;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  .feather-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .table-cell, .table-header {
     padding: 0.6rem 0.5rem;
     font-size: 0.8rem;
@@ -583,12 +583,20 @@ html.dark .feather-dashboard-title {
 
   .container {
     padding: 1rem;
-    margin: 0.75rem auto;
-    width: 98%;
+    margin: 2rem auto;
+    border-radius: 0px;
   }
 
   .stats-grid {
     gap: 0.6rem;
+  }
+
+  .stat-title {
+    font-size: 0.8rem;
+  }
+
+  .stat-value {
+    font-size: 0.8rem;
   }
 
   .dashboard-title, .feather-dashboard-title {
@@ -612,42 +620,31 @@ html.dark .feather-dashboard-title {
     padding: 0.2rem 0.5rem;
     margin: 0 0.1rem;
   }
-}
 
-@media (max-width: 767px) {
   .nav-container {
-    padding: 0.6rem 0.75rem;
+    padding: 0.75rem 1rem;
+    flex-wrap: wrap;
   }
 
   .nav-link {
-    padding: 0.4rem 0.6rem;
-    font-size: 0.9rem;
+    font-size: 0.7rem;
   }
 
   .dark-toggle {
-    padding: 0.4rem;
-  }
-
-  .nav-link {
-    font-size: 0.85rem;
-  }
-
-  .price-info {
-    margin-right: 3rem;
-    gap: 0.4rem;
+    margin-left: auto;
   }
   
-  .price-display {
-    padding: 0.35rem 0.5rem;
-    font-size: 0.75rem;
-  }
-}
-
-@media (max-width: 400px) {
   .data-table {
-    display: block;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    width: auto;
+    min-width: 100%;
+  }
+  
+  .table-cell:nth-child(2) {
+    min-width: 80px;
+  }
+
+  .price-display {
+    font-size: 0.7rem;
   }
 }
 
@@ -659,13 +656,6 @@ html.dark .feather-dashboard-title {
 html.dark .price-display {
   background-color: rgba(0, 0, 0, 0.3);
   border-color: rgba(255, 255, 255, 0.15);
-}
-
-@media (max-width: 767px) {
-  body {
-    margin: 0;
-    padding: 0;
-  }
 }
 
 .price-display-link {

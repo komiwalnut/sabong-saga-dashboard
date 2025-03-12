@@ -151,7 +151,7 @@ export default function FeatherHoldersDashboard() {
           <p className="stat-value">{formatDisplayValue(stats.burnedTokens)}</p>
         </div>
         <div className="stat-card">
-          <h3 className="stat-title">Total Owners</h3>
+          <h3 className="stat-title">Holders</h3>
           <p className="stat-value">{formatDisplayValue(stats.totalOwners)}</p>
         </div>
         <div className="stat-card">
