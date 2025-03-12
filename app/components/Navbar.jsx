@@ -10,6 +10,10 @@ export default function Navbar() {
   const [mounted, setMounted] = useState(false);
   const [cockPrice, setCockPrice] = useState(null);
   const [featherPrice, setFeatherPrice] = useState(null);
+  
+  const isCockPage = pathname.startsWith('/cock-token');
+  const isFeatherPage = pathname.startsWith('/feather');
+  const pageClassName = isCockPage ? 'cock-page' : isFeatherPage ? 'feather-page' : '';
 
   const toggleDarkMode = () => {
     const newValue = !isDark;
@@ -69,7 +73,6 @@ export default function Navbar() {
         
         if (data.featherPrice !== null && data.featherPrice !== undefined) {
           setFeatherPrice(data.featherPrice);
-
         } else {
           console.log("No valid Feather price in response:", data);
         }
@@ -93,7 +96,7 @@ export default function Navbar() {
     : <span className="loading-price">Loading...</span>;
 
   return (
-    <nav className="navbar">
+    <nav className={`navbar ${pageClassName}`}>
       <div className="nav-container">
         <Link href="/cock-token" className={`nav-link ${pathname.startsWith('/cock-token') ? 'active' : ''}`}>
           $COCK
@@ -107,7 +110,7 @@ export default function Navbar() {
             href="https://app.roninchain.com/swap?outputCurrency=0x8FD6b3FA81ADf438FEeb857E0b8aEd5f74f718ad#/swap" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="price-display-link"
+            className="price-display-link cock-price-display"
           >
             <span className="price-display">
               <span className="price-symbol">1 COCK =</span>
@@ -118,7 +121,7 @@ export default function Navbar() {
             href="https://marketplace.roninchain.com/collections/sabong-saga-game-items/1" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="price-display-link"
+            className="price-display-link feather-price-display"
           >
             <span className="price-display">
               <span className="price-symbol">1 Feather =</span>
